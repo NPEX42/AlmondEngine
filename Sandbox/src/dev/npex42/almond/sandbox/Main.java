@@ -34,9 +34,9 @@ public class Main {
 	
 	private static float[] colors = {
 			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1,
+			1,1,0,1,
+			1,0,1,1,
+			0,1,1,1,
 	};
 	
 	private static int indices[] = {  // note that we start from 0!
@@ -57,13 +57,23 @@ public class Main {
 		
 		Material mat = new Material(shader, test);
 		mat.bind();
+		long frameStart, frameEnd;
 		while(!window.shouldClose()) {
+			frameStart = System.nanoTime();
 			r.clear(Color.BLUE);
 			if(window.isKeyDown(GLFW.GLFW_KEY_1)) {
 				r.drawWireFrame(triangle);
 			} else {
 				r.drawMesh(triangle);
 			}
+			frameEnd = System.nanoTime();
+			
+			long frameTime = frameEnd - frameStart;
+			frameTime /= 100;
+			float deltaTime = (float) frameTime / 1000000f;
+			
+			window.setTitle("Almond Engine - Sandbox - Triangles Drawn: "+r.getStatistics().trisDrawn()+" - Frame Time: "+frameTime+"us (dt: "+String.format("%01.6f", deltaTime)+")");
+			r.resetStats();
 			window.update();
 		}
 	}

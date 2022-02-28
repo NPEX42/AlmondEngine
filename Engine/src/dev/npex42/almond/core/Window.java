@@ -36,5 +36,9 @@ public class Window extends IWindow {
 	
 	public boolean isKeyDown(int key) {
 		return glfwGetKey(id, key) == GLFW_PRESS;
-	} 
+	}
+	
+	public void setTitle(String title) {
+		glfwSetWindowTitle(id, title);
+	}
 }

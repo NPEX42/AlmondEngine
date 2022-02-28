@@ -1,6 +1,7 @@
 package dev.npex42.almond.opengl;
 import static org.lwjgl.opengl.GL46.*;
 
+import java.net.BindException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
@@ -21,6 +22,17 @@ public class Texture2D {
 	public void setPixels(int width, int height, FloatBuffer values) {
 		bind();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, values);
+	}
+	
+	
+	public static Texture2D white() {
+		
+		float[] pixels = {1,1,1};
+		
+		Texture2D tex = new Texture2D();
+		tex.setPixels(1, 1, FloatBuffer.wrap(pixels));	
+		
+		return tex;
 	}
 	
 	public void generateMipMaps() {

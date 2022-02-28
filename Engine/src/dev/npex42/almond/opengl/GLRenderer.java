@@ -5,11 +5,12 @@ import java.awt.Color;
 import dev.npex42.almond.renderer.IRenderer;
 import dev.npex42.almond.renderer.Material;
 import dev.npex42.almond.renderer.Mesh;
+import dev.npex42.almond.renderer.RenderingStats;
 
 import static org.lwjgl.opengl.GL46.*;
 
 public class GLRenderer implements IRenderer {
-
+	private int trisDrawn = 0;
 	@Override
 	public void clear(Color clr) {
 		glClearColor(
@@ -26,6 +27,7 @@ public class GLRenderer implements IRenderer {
 	public void drawMesh(Mesh mesh) {
 		mesh.bind();
 		glDrawElements(GL_TRIANGLES, mesh.vertexCount(), GL_UNSIGNED_INT, 0);
+		trisDrawn += mesh.vertexCount() / 3;
 	}
 
 	@Override
@@ -38,6 +40,16 @@ public class GLRenderer implements IRenderer {
 	@Override
 	public void setActiveMaterial(Material mat) {
 		mat.bind();
+	}
+
+	@Override
+	public RenderingStats getStatistics() {
+		return new RenderingStats(trisDrawn);
+	}
+
+	@Override
+	public void resetStats() {
+		trisDrawn = 0;
 	}
 
 }

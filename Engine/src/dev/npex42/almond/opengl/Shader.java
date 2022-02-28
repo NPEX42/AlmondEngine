@@ -1,7 +1,7 @@
 package dev.npex42.almond.opengl;
 
-import dev.npex42.almond.core.IO;
-import dev.npex42.almond.core.Logger;
+import dev.npex42.almond.common.IO;
+import dev.npex42.almond.common.Logger;
 
 import static org.lwjgl.opengl.GL46.*;
 

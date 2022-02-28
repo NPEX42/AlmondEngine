@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.stb.STBImage;
 
-import dev.npex42.almond.core.Logger;
+import dev.npex42.almond.common.Logger;
 public class Texture2D {
 	private int textureID;
 	

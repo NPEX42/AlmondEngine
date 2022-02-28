@@ -1,4 +1,4 @@
-package dev.npex42.almond.core;
+package dev.npex42.almond.common;
 
 import java.io.PrintStream;
 import java.sql.Time;

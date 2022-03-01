@@ -1,11 +1,12 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec4 oTint;
 in vec2 oTexCoord;
+in vec4 oColor;
 uniform sampler2D uAlbedo;
 
 void main()
 {
-    FragColor = texture(uAlbedo, oTexCoord) * oTint;
+    //FragColor = texture(uAlbedo, oTexCoord);
+    FragColor = oColor;
 } 

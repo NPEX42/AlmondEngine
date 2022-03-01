@@ -8,17 +8,18 @@ public class Material {
 	private static final int ALBEDO = 0, SPECULAR = 1;
 	
 	
-	private Shader shader;
-	private Texture2D albedo;
+	private IShader shader;
+	private ITexture2D albedo;
 	
-	public Material(Shader shdr, Texture2D _albedo) {
+	public Material(IShader shdr, ITexture2D _albedo) {
 		shader = shdr;
 		albedo = _albedo;
+		albedo.setUnit(ALBEDO);
 	}
 	
 	public void bind() {
 		shader.bind();
-		shader.setTexture2D("uAlbedo", ALBEDO, albedo);
+		shader.setTexture("uAlbedo", albedo);
 	}
 	
 }

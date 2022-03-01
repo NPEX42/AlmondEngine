@@ -2,6 +2,8 @@ package dev.npex42.almond.sandbox;
 
 import java.awt.Color;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import dev.npex42.almond.core.IWindow;
@@ -10,9 +12,15 @@ import dev.npex42.almond.glfw.Wrapper;
 import dev.npex42.almond.opengl.GLRenderer;
 import dev.npex42.almond.opengl.Shader;
 import dev.npex42.almond.opengl.Texture2D;
+import dev.npex42.almond.renderer.ICamera;
 import dev.npex42.almond.renderer.IRenderer;
+import dev.npex42.almond.renderer.IShader;
 import dev.npex42.almond.renderer.Material;
 import dev.npex42.almond.renderer.Mesh;
+import dev.npex42.almond.renderer.ModelLoader;
+import dev.npex42.almond.renderer.OrthoCamera;
+import dev.npex42.almond.renderer.PerspectiveCam;
+import dev.npex42.almond.renderer.Transform;
 
 public class Main {
 	private static Window window;
@@ -33,10 +41,10 @@ public class Main {
 	};
 	
 	private static float[] colors = {
+			1,1,1,0,
 			1,1,1,1,
-			1,1,0,1,
-			1,0,1,1,
-			0,1,1,1,
+			1,1,1,1,
+			1,1,1,1,
 	};
 	
 	private static int indices[] = {  // note that we start from 0!
@@ -47,24 +55,34 @@ public class Main {
 	public static void main(String[] args) {
 		Wrapper.initialize();
 		window = IWindow.constructWindow(480, 320, "Almond Engine - Sandbox");
-		Mesh triangle = new Mesh(vertices, uvs, colors, indices);
+		ModelLoader loader = new ModelLoader();
+		Mesh rectangle = loader.loadMdl("res/models/rect.mdl");
 		r = new GLRenderer();
-		Shader shader = new Shader("res/shaders/base.vert.glsl", "res/shaders/base.frag.glsl");
+		IShader shader = new Shader("res/shaders/base.vert.glsl", "res/shaders/base.frag.glsl");
 		shader.bind();
 		
-		Texture2D test = Texture2D.load("res/textures/test.png", true);
+		Texture2D test = Texture2D.missing();
 		test.ScaleNearest();
+		
+		ICamera camera = new OrthoCamera(480, 320);
+		
+		
 		
 		Material mat = new Material(shader, test);
 		mat.bind();
+		Transform transform = new Transform();
+		//transform.setScale(new Vector3f(100, 100, 0));
 		long frameStart, frameEnd;
 		while(!window.shouldClose()) {
 			frameStart = System.nanoTime();
+			shader.setMatrix4f("uProjection", new Matrix4f().identity());
+			shader.setMatrix4f("uView", camera.getView());
+			shader.setMatrix4f("uModel", transform.getTransformMat());
 			r.clear(Color.BLUE);
 			if(window.isKeyDown(GLFW.GLFW_KEY_1)) {
-				r.drawWireFrame(triangle);
+				r.drawWireFrame(rectangle);
 			} else {
-				r.drawMesh(triangle);
+				r.drawMesh(rectangle);
 			}
 			frameEnd = System.nanoTime();
 			

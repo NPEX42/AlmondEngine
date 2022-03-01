@@ -8,8 +8,11 @@ import java.nio.FloatBuffer;
 import org.lwjgl.stb.STBImage;
 
 import dev.npex42.almond.common.Logger;
-public class Texture2D {
+import dev.npex42.almond.renderer.ITexture2D;
+public class Texture2D implements ITexture2D {
 	private int textureID;
+	private int textureUnit;
+	private int width, height, channels;
 	
 	public Texture2D() {
 		textureID = glGenTextures();
@@ -22,17 +25,19 @@ public class Texture2D {
 	public void setPixels(int width, int height, FloatBuffer values) {
 		bind();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, values);
+		this.height = height;
+		this.width = width;
+		this.channels = 3;
 	}
 	
 	
 	public static Texture2D white() {
 		
-		float[] pixels = {1,1,1};
-		
-		Texture2D tex = new Texture2D();
-		tex.setPixels(1, 1, FloatBuffer.wrap(pixels));	
-		
-		return tex;
+		return Texture2D.load("res/textures/white.png", false);
+	}
+	
+	public static Texture2D missing() {
+		return Texture2D.load("res/textures/missing.png", false);
 	}
 	
 	public void generateMipMaps() {
@@ -73,7 +78,45 @@ public class Texture2D {
 	}
 	
 	public void makeActive(int unit) {
-		glActiveTexture(GL_TEXTURE0 + unit);
+		
+		
+		this.textureUnit = GL_TEXTURE0 + unit;
+		glActiveTexture(this.textureUnit);
 		bind();
+	}
+
+	@Override
+	public int id() {
+		// TODO Auto-generated method stub
+		return textureID;
+	}
+
+	@Override
+	public int unit() {
+		// TODO Auto-generated method stub
+		return textureUnit;
+	}
+
+	@Override
+	public int width() {
+		// TODO Auto-generated method stub
+		return width;
+	}
+
+	@Override
+	public int height() {
+		// TODO Auto-generated method stub
+		return height;
+	}
+
+	@Override
+	public int channels() {
+		// TODO Auto-generated method stub
+		return channels;
+	}
+
+	@Override
+	public void setUnit(int unit) {
+		textureUnit = GL_TEXTURE0 + unit;
 	}
 }

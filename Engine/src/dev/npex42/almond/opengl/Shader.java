@@ -2,11 +2,15 @@ package dev.npex42.almond.opengl;
 
 import dev.npex42.almond.common.IO;
 import dev.npex42.almond.common.Logger;
+import dev.npex42.almond.renderer.IShader;
+import dev.npex42.almond.renderer.ITexture2D;
 
 import static org.lwjgl.opengl.GL46.*;
 
 import java.util.HashMap;
-public class Shader {
+
+import org.joml.*;
+public class Shader implements IShader {
 	
 	private HashMap<String, Integer> uniforms = new HashMap<>();
 	
@@ -59,6 +63,7 @@ public class Shader {
 		}
 	}
 	
+	@Override
 	public void bind() {
 		glUseProgram(program_id);
 	}
@@ -72,6 +77,18 @@ public class Shader {
 		setInt(name, unit);
 	}
 	
+	public void setMatrix3f(String name, Matrix3f mat) {
+		float[] buf = new float[9];
+		mat.get(buf);
+		glUniform4fv(getUniform(name), buf);
+	}
+	
+	public void setMatrix4f(String name, Matrix4f mat) {
+		float[] buf = new float[16];
+		mat.get(buf);
+		glUniform4fv(getUniform(name), buf);
+	}
+	
 	private int getUniform(String name) {
 		if(uniforms.containsKey(name)) {
 			return uniforms.get(name);
@@ -79,11 +96,73 @@ public class Shader {
 			int loc = glGetUniformLocation(program_id, name);
 			if(loc == -1) {
 				Logger.warn("Failed To Locate Shader Uniform '%s'", name);
+				uniforms.put(name, -1);
 			} else {
 				uniforms.put(name, loc);
 			}
 			
 			return loc;
+		}
+	}
+
+	@Override
+	public IShader createFromFiles(String vertPath, String fragPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setFloat(String name, float x) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVector2i(String name, Vector2i vec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVector3i(String name, Vector3i vec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVector4i(String name, Vector4i vec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVector2f(String name, Vector2f vec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVector3f(String name, Vector3f vec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVector4f(String name, Vector4f vec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMatrix2f(String name, Matrix2f mat) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTexture(String name, ITexture2D tex) {
+		if(tex instanceof Texture2D) {
+			setTexture2D(name, tex.unit(), (Texture2D) tex);
 		}
 	}
 	

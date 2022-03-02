@@ -85,8 +85,7 @@ public class Shader implements IShader {
 	
 	public void setMatrix4f(String name, Matrix4f mat) {
 		float[] buf = new float[16];
-		mat.get(buf);
-		glUniform4fv(getUniform(name), buf);
+		glUniformMatrix4fv(getUniform(name), false,  mat.get(buf));
 	}
 	
 	private int getUniform(String name) {

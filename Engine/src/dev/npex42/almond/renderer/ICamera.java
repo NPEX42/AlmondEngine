@@ -12,4 +12,5 @@ public interface ICamera {
 	public Matrix4f getProjection();
 	public Matrix4f getView();
 	public void translate(float x, float y, float z);
+	
 }

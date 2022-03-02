@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 public class PerspectiveCam implements ICamera {
-	private double far = 1000, near = 1, fov = 90;
+	private double far = 1000, near = -1, fov = 90;
 	private float height, width;
 	private Vector2f position, rotation;
 	@Override
@@ -39,9 +39,7 @@ public class PerspectiveCam implements ICamera {
 
 	@Override
 	public Matrix4f getProjection() {
-		Matrix4f mat = new Matrix4f().identity();
-		mat = mat.perspective((float)fov, width/height, (float)near, (float)far);
-		return mat;
+		return new Matrix4f().perspective((float)fov, width/height, (float)near, (float)far);
 	}
 
 	@Override

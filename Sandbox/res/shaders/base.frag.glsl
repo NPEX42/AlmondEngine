@@ -7,6 +7,6 @@ uniform sampler2D uAlbedo;
 
 void main()
 {
-    //FragColor = texture(uAlbedo, oTexCoord);
-    FragColor = oColor;
+    FragColor = texture(uAlbedo, oTexCoord);
+    //FragColor = vec4(oColor.xyz, 1);
 } 

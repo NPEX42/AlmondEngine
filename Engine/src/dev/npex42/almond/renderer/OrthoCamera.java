@@ -8,13 +8,11 @@ public class OrthoCamera implements ICamera {
 
 	private double far = 1000, near = 1, fov = 90;
 	private float height, width;
-	private Vector2f position, rotation;
+	private Transform transform = Transform.origin();
 	
 	public OrthoCamera(float _width, float _height) {
 		width = _width;
 		height = _height;
-		
-		position = new Vector2f(0, 0);
 	}
 	
 	@Override
@@ -47,22 +45,17 @@ public class OrthoCamera implements ICamera {
 
 	@Override
 	public Matrix4f getProjection() {
-		Matrix4f mat = new Matrix4f();
-		mat = mat.ortho(0, width, 0, height, 1, -1);
-		return mat;
+		return new Matrix4f().ortho(0, width, height, 0, -1000, 1000);
 	}
 	
 	@Override
 	public Matrix4f getView() {
-		Matrix4f mat = new Matrix4f();
-		mat = mat.identity();
-		return mat;
+		return new Matrix4f().identity();
 	}
 
 	@Override
-	public void translate(float x, float y, float z) {
-		// TODO Auto-generated method stub
-		
+	public void translate(float dx, float dy, float dz) {
+		transform.translate(dx, dy, dz);
 	}
 	
 }

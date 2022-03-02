@@ -16,14 +16,12 @@ public class Transform {
 	private Vector3f position = ZERO, rotation = ZERO, scale = ONE; 
 	
 	public Matrix4f getTransformMat() {
-		Matrix4f mat = new Matrix4f().identity();
-		mat.translate(position);
-		
-		mat.rotate(rotation.x, POS_X);
-		mat.rotate(rotation.y, POS_Y);
-		mat.rotate(rotation.z, POS_Z);
-		
-		mat.scale(scale);
+		Matrix4f mat = new Matrix4f()
+				.translate(position)
+				.rotate(rotation.x, POS_X)
+				.rotate(rotation.y, POS_Y)
+				.rotate(rotation.z, POS_Z)
+				.scale(scale);
 		
 		return mat;
 	}
@@ -38,5 +36,18 @@ public class Transform {
 	
 	public void setScale(Vector3f _scale) {
 		scale = _scale;
+	}
+	
+	public void rotate(float dx, float dy, float dz) {
+		rotation.add(dx, dy, dz);
+	}
+	
+	public void translate(float dx, float dy, float dz) {
+		position.add(dx, dy, dz);
+	}
+	
+	public static Transform origin() {
+		Transform t = new Transform();
+		return t;
 	}
 }

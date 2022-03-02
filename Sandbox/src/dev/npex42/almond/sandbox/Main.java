@@ -53,11 +53,15 @@ public class Main {
 	};
 	
 	public static void main(String[] args) {
+		
 		Wrapper.initialize();
 		window = IWindow.constructWindow(480, 320, "Almond Engine - Sandbox");
+		
 		ModelLoader loader = new ModelLoader();
 		Mesh rectangle = loader.loadMdl("res/models/rect.mdl");
+		
 		r = new GLRenderer();
+		
 		IShader shader = new Shader("res/shaders/base.vert.glsl", "res/shaders/base.frag.glsl");
 		shader.bind();
 		
@@ -66,29 +70,63 @@ public class Main {
 		
 		ICamera camera = new OrthoCamera(480, 320);
 		
-		
-		
+
 		Material mat = new Material(shader, test);
 		mat.bind();
+		
 		Transform transform = new Transform();
-		//transform.setScale(new Vector3f(100, 100, 0));
+		transform.setScale(new Vector3f(100, 100, 0));
+		transform.setPosition(new Vector3f(240, 160, 0));
+		
 		long frameStart, frameEnd;
+		
 		while(!window.shouldClose()) {
+			
 			frameStart = System.nanoTime();
-			shader.setMatrix4f("uProjection", new Matrix4f().identity());
-			shader.setMatrix4f("uView", camera.getView());
-			shader.setMatrix4f("uModel", transform.getTransformMat());
+			
+			Matrix4f mvp = new Matrix4f().identity();
+			mvp.mul(camera.getProjection());
+			mvp.mul(transform.getTransformMat());
+			
+			shader.setMatrix4f("uMVP", mvp);
+			
 			r.clear(Color.BLUE);
+			
 			if(window.isKeyDown(GLFW.GLFW_KEY_1)) {
 				r.drawWireFrame(rectangle);
 			} else {
 				r.drawMesh(rectangle);
 			}
+			
 			frameEnd = System.nanoTime();
 			
 			long frameTime = frameEnd - frameStart;
 			frameTime /= 100;
 			float deltaTime = (float) frameTime / 1000000f;
+			
+			if(window.isKeyDown(GLFW.GLFW_KEY_A)) {
+				transform.translate(-100f * deltaTime, 0, 0);
+			}
+			
+			if(window.isKeyDown(GLFW.GLFW_KEY_D)) {
+				transform.translate(100f * deltaTime, 0, 0);
+			}
+			
+			if(window.isKeyDown(GLFW.GLFW_KEY_W)) {
+				transform.translate(0, -100f * deltaTime, 0);
+			}
+			
+			if(window.isKeyDown(GLFW.GLFW_KEY_S)) {
+				transform.translate(0, 100f * deltaTime, 0);
+			}
+			
+			if(window.isKeyDown(GLFW.GLFW_KEY_Q)) {
+				transform.rotate(0, 0, (float) Math.toRadians(20) * deltaTime);
+			}
+			
+			if(window.isKeyDown(GLFW.GLFW_KEY_E)) {
+				transform.rotate(0, 0, (float) Math.toRadians(-20) * deltaTime);
+			}
 			
 			window.setTitle("Almond Engine - Sandbox - Triangles Drawn: "+r.getStatistics().trisDrawn()+" - Frame Time: "+frameTime+"us (dt: "+String.format("%01.6f", deltaTime)+")");
 			r.resetStats();
